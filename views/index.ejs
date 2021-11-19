@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title><%= title %></title>
+    <link rel='stylesheet' href='/stylesheets/style.css'/>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+</head>
+<body>
+<textarea rows="20" cols="30" id="chat"></textarea><br>
+<input type="text" id="msg"><input type="button" value="msg submit" onclick="myOnClick()">
+</body>
+<script>
+    var ws = new WebSocket('ws://localhost:3100');
+    //var ws = new WebSocket('ws://101.101.216.193:3100');
+
+    ws.onopen = (event) => {
+        console.log("---------------------------------------------");
+        let sendData = {id: 'M/W1', event: 'onOpen', data:'M/W1 connect'}
+        ws.send(JSON.stringify(sendData));
+        console.log("---------------------------------------------\n\n");
+    }
+
+    ws.onmessage = (event) => {
+        console.log("---------------------------------------------");
+        console.log("M/W1 : Data Received From Server");
+        console.log(event.data);
+        let recData = JSON.parse(event.data);
+        switch (recData.event) {
+            case 'res':
+
+                console.log('M/W1 event : ' + recData.event);
+                console.log('M/W1 result : ' + recData.result);
+                break;
+
+            case 'control':
+
+                console.log('M/W1 event : ' + recData.event);
+                console.log('M/W1 data : ' + recData.data);
+                break;
+            default:
+        }
+
+        console.log("---------------------------------------------\n\n");
+    }
+
+    function myOnClick() {
+        let sendData = {id: 'M/W1', event: 'status', data: {comment: $('#msg').val()}};
+
+        console.log("---------------------------------------------");
+        console.log("sendData : " + JSON.stringify(sendData));
+        console.log("---------------------------------------------\n\n");
+
+        ws.send(JSON.stringify(sendData));
+        $('#msg').val('');
+    }
+</script>
+</html>
