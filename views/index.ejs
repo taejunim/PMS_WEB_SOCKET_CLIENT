@@ -6,8 +6,11 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
 </head>
 <body>
-<textarea rows="20" cols="30" id="chat"></textarea><br>
-<input type="text" id="msg"><input type="button" value="msg submit" onclick="myOnClick()">
+
+<input type="button" value="main data" onclick="sendStatusData()">
+<input type="button" value="monitoring data" onclick="sendOperationMonitoringData()">
+<input type="button" value="pcsInnerSensor data" onclick="sendPcsInnerSensorData()">
+<input type="button" value="batteryInnerSensor data" onclick="sendBatteryInnerSensorData()">
 </body>
 <script>
     var ws = new WebSocket('ws://localhost:3100');
@@ -15,43 +18,704 @@
 
     ws.onopen = (event) => {
         console.log("---------------------------------------------");
-        let sendData = {id: 'M/W1', event: 'onOpen', data:'M/W1 connect'}
+        let sendData = {id: 'M/W2', eventType: 'req', deviceType: 'middleware', dataType: 'connect'};
         ws.send(JSON.stringify(sendData));
         console.log("---------------------------------------------\n\n");
     }
 
     ws.onmessage = (event) => {
         console.log("---------------------------------------------");
-        console.log("M/W1 : Data Received From Server");
-        console.log(event.data);
-        let recData = JSON.parse(event.data);
-        switch (recData.event) {
-            case 'res':
+        console.log("M/W2 : Data Received From Server");
 
-                console.log('M/W1 event : ' + recData.event);
-                console.log('M/W1 result : ' + recData.result);
+        let receivedData = JSON.parse(event.data);
+
+        switch (receivedData.eventType) {
+
+            case 'req' :
+
+                switch (receivedData.dataType) {
+
+                    case 'status':
+                        console.log('              status                ');
+                        console.log(event.data);
+                        console.log('M/W2 id : ' + receivedData.id);
+                        console.log('M/W2 eventType : ' + receivedData.eventType);
+                        console.log('M/W2 dataType : ' + receivedData.dataType);
+                        console.log('M/W2 result : ' + receivedData.result);
+                        console.log('M/W2 message : ' + receivedData.message);
+                        break;
+
+                    case 'control':
+                        console.log('              control                ');
+                        console.log(event.data);
+                        console.log('M/W2 id : ' + receivedData.id);
+                        console.log('M/W2 eventType : ' + receivedData.eventType);
+                        console.log('M/W2 deviceType : ' + receivedData.deviceType);
+                        console.log('M/W2 dataType : ' + receivedData.dataType);
+                        console.log('M/W2 data : ' + receivedData.data);
+                        console.log('M/W2 targetId : ' + receivedData.data.targetId);
+                        console.log('M/W2 controlType : ' + receivedData.data.controlType);
+                        console.log('M/W2 controlValue : ' + receivedData.data.controlValue);
+
+                        let sendData = {
+                            id: receivedData.id,
+                            eventType: 'res',
+                            dataType: receivedData.dataType,
+                            result: 'success',
+                            message: ''
+                        };
+
+                        console.log("---------------------------------------------");
+                        console.log("sendData : " + JSON.stringify(sendData));
+                        console.log("---------------------------------------------\n\n");
+
+                        ws.send(JSON.stringify(sendData));
+
+                        break;
+                    default:
+                }
+
                 break;
 
-            case 'control':
+            case 'res' :
 
-                console.log('M/W1 event : ' + recData.event);
-                console.log('M/W1 data : ' + recData.data);
+                switch (receivedData.dataType) {
+                    case 'connect':
+                        console.log('              connect                ');
+                        console.log(event.data);
+                        console.log('M/W2 id : ' + receivedData.id);
+                        console.log('M/W2 eventType : ' + receivedData.eventType);
+                        console.log('M/W2 dataType : ' + receivedData.dataType);
+                        console.log('M/W2 result : ' + receivedData.result);
+                        console.log('M/W2 message : ' + receivedData.message);
+                        break;
+
+                    case 'status':
+                        console.log('              status                ');
+                        console.log(event.data);
+                        console.log('M/W2 id : ' + receivedData.id);
+                        console.log('M/W2 eventType : ' + receivedData.eventType);
+                        console.log('M/W2 dataType : ' + receivedData.dataType);
+                        console.log('M/W2 result : ' + receivedData.result);
+                        console.log('M/W2 message : ' + receivedData.message);
+                        break;
+
+                    case 'control':
+                        console.log('              control                ');
+                        console.log(event.data);
+                        console.log('M/W2 id : ' + receivedData.id);
+                        console.log('M/W2 eventType : ' + receivedData.eventType);
+                        console.log('M/W2 deviceType : ' + receivedData.deviceType);
+                        console.log('M/W2 dataType : ' + receivedData.dataType);
+                        console.log('M/W2 data : ' + receivedData.data);
+                        console.log('M/W2 targetId : ' + receivedData.data.targetId);
+                        console.log('M/W2 controlType : ' + receivedData.data.controlType);
+                        console.log('M/W2 controlValue : ' + receivedData.data.controlValue);
+
+                        let sendData = {
+                            id: receivedData.id,
+                            eventType: 'res',
+                            dataType: receivedData.dataType,
+                            result: 'success',
+                            message: ''
+                        };
+
+                        console.log("---------------------------------------------");
+                        console.log("sendData : " + JSON.stringify(sendData));
+                        console.log("---------------------------------------------\n\n");
+
+                        ws.send(JSON.stringify(sendData));
+
+                        break;
+                    default:
+                }
+
                 break;
-            default:
+
         }
+
+
 
         console.log("---------------------------------------------\n\n");
     }
 
-    function myOnClick() {
-        let sendData = {id: 'M/W1', event: 'status', data: {comment: $('#msg').val()}};
+    function sendStatusData() {
+        setTimeout(function(){
+
+            sendPcsData(0);
+        }, 1000);
+
+        setTimeout(function(){
+
+            sendPcsData(1);
+        }, 2000);
+
+        setTimeout(function(){
+
+            sendPcsData(0);
+        }, 3000);
+
+        setTimeout(function(){
+
+            sendPcsData(1);
+        }, 4000);
+
+        setTimeout(function(){
+
+            sendPcsData(0);
+        }, 5000);
+
+        setTimeout(function(){
+
+            sendPcsData(1);
+        }, 6000);
+
+        setTimeout(function(){
+
+            sendPcsData(0);
+        }, 7000);
+        setTimeout(function(){
+
+            sendPcsData(1);
+        }, 8000);
+
+        setTimeout(function(){
+
+            sendPcsData(0);
+        }, 9000);
+        setTimeout(function(){
+
+            sendPcsData(1);
+        }, 10000);
+
+
+        //Battery
+        setTimeout(function(){
+
+            sendBatteryData(0);
+        }, 1000);
+
+        setTimeout(function(){
+
+            sendBatteryData(1);
+        }, 2000);
+
+        setTimeout(function(){
+
+            sendBatteryData(2);
+        }, 3000);
+
+        setTimeout(function(){
+
+            sendBatteryData(3);
+        }, 4000);
+
+        setTimeout(function(){
+
+            sendBatteryData(4);
+        }, 5000);
+
+        setTimeout(function(){
+
+            sendBatteryData(3);
+        }, 6000);
+
+        setTimeout(function(){
+
+            sendBatteryData(2);
+        }, 7000);
+
+        setTimeout(function(){
+
+            sendBatteryData(1);
+        }, 8000);
+
+        setTimeout(function(){
+
+            sendBatteryData(0);
+        }, 9000);
+
+        setTimeout(function(){
+
+            sendBatteryData(4);
+        }, 10000);
+    }
+
+    function sendOperationMonitoringData() {
+        setTimeout(function(){
+
+            sendMonitoringData(0);
+        }, 1000);
+
+        setTimeout(function(){
+
+            sendMonitoringData(1);
+        }, 2000);
+
+        setTimeout(function(){
+
+            sendMonitoringData(0);
+        }, 3000);
+
+        setTimeout(function(){
+
+            sendMonitoringData(1);
+        }, 4000);
+
+        setTimeout(function(){
+
+            sendMonitoringData(0);
+        }, 5000);
+
+        setTimeout(function(){
+
+            sendMonitoringData(1);
+        }, 6000);
+
+        setTimeout(function(){
+
+            sendMonitoringData(0);
+        }, 7000);
+        setTimeout(function(){
+
+            sendMonitoringData(1);
+        }, 8000);
+
+        setTimeout(function(){
+
+            sendMonitoringData(0);
+        }, 9000);
+        setTimeout(function(){
+
+            sendMonitoringData(1);
+        }, 10000);
+    }
+
+    function sendPcsData(index) {
+
+        var disChargePower;
+        var rSVolt;
+        var upRCurr;
+        var dcLinkVolt;
+        var frequencyHz;
+        var sTVolt;
+        var upSCurr;
+        var dcBatteryVolt;
+        var tRVolt;
+        var upTCurr;
+        var dcBatteryCurr;
+
+        if (index == 0) {
+            disChargePower = '11.5';
+            rSVolt = '41.2';
+            upRCurr = '11.2';
+            dcLinkVolt = '41.5';
+            frequencyHz = '23.3';
+            sTVolt = '38.8';
+            upSCurr = '11.4';
+            dcBatteryVolt = '221.2';
+            tRVolt = '42.2';
+            upTCurr = '11.3';
+            dcBatteryCurr = '11.5';
+        } else {
+            disChargePower = '10.5';
+            rSVolt = '40.2';
+            upRCurr = '10.2';
+            dcLinkVolt = '40.5';
+            frequencyHz = '22.3';
+            sTVolt = '39.8';
+            upSCurr = '10.4';
+            dcBatteryVolt = '220.2';
+            tRVolt = '41.2';
+            upTCurr = '10.3';
+            dcBatteryCurr = '10.5';
+        }
+
+        let sendData = {
+            id: 'M/W2',
+            eventType: 'req',
+            deviceType: 'pcs',
+            dataType: 'status',
+            data: {
+                operationStatus : 'discharging',
+                faultExistYn : 'N',
+                disChargePower : disChargePower,
+                rSVolt : rSVolt,
+                upRCurr : upRCurr,
+                dcLinkVolt : dcLinkVolt,
+                frequencyHz : frequencyHz,
+                sTVolt : sTVolt,
+                upSCurr : upSCurr,
+                dcBatteryVolt : dcBatteryVolt,
+                tRVolt : tRVolt,
+                upTCurr : upTCurr,
+                dcBatteryCurr : dcBatteryCurr
+            }
+        };
 
         console.log("---------------------------------------------");
         console.log("sendData : " + JSON.stringify(sendData));
         console.log("---------------------------------------------\n\n");
 
         ws.send(JSON.stringify(sendData));
-        $('#msg').val('');
+    }
+
+    function sendBatteryData(index) {
+
+        var soc0;
+        var rackVolt0;
+        var rackCurrent0;
+
+        var soc1;
+        var rackVolt1;
+        var rackCurrent1;
+
+        if (index == 0) {
+            soc0 = '22.2';
+            rackVolt0 = '23.1';
+            rackCurrent0 = '11.1';
+
+            soc1 = '96.9';
+            rackVolt1 = '23.9';
+            rackCurrent1 = '11.9';
+
+        } else if (index == 1) {
+            soc0 = '48.9';
+            rackVolt0 = '23.1';
+            rackCurrent0 = '11.1';
+
+            soc1 = '76.9';
+            rackVolt1 = '23.9';
+            rackCurrent1 = '11.9';
+
+        } else if (index == 2) {
+            soc0 = '50.1';
+            rackVolt0 = '23.1';
+            rackCurrent0 = '11.1';
+
+            soc1 = '50.1';
+            rackVolt1 = '23.9';
+            rackCurrent1 = '11.9';
+
+        } else if (index == 3) {
+            soc0 = '76.9';
+            rackVolt0 = '23.1';
+            rackCurrent0 = '11.1';
+
+            soc1 = '48.9';
+            rackVolt1 = '23.9';
+            rackCurrent1 = '11.9';
+
+        } else {
+            soc0 = '96.9';
+            rackVolt0 = '22.3';
+            rackCurrent0 = '11.3';
+
+            soc1 = '22.2';
+            rackVolt1 = '23.8';
+            rackCurrent1 = '11.8';
+        }
+
+        let rackData = {
+            rackInfo: [{
+                rackNo: '1',
+                chargingStatus: 'discharging',
+                soc: soc0,
+                rackVolt: rackVolt0,
+                rackCurrent: rackCurrent0,
+                moduleInfo: [{
+                    moduleNo: '1',
+                    cellInfo: {
+                        cell1Volt: '1.0',
+                        cell2Volt: '2.0',
+                        cell3Volt: '3.0'
+                    },
+                    temperatureInfo: {
+                        temperature1: '20.1',
+                        temperature2: '20.2',
+                        temperature3: '20.3'
+                    }
+                },
+                    {
+                        moduleNo: '2',
+                        cellInfo: {
+                            cell1Volt: '1.0',
+                            cell2Volt: '2.0',
+                            cell3Volt: '3.0'
+                        },
+                        temperatureInfo: {
+                            temperature1: '20.1',
+                            temperature2: '20.2',
+                            temperature3: '20.3'
+                        }
+                    }
+                ]
+            },
+                {
+                    rackNo: '2',
+                    chargingStatus: 'discharging',
+                    soc: soc1,
+                    rackVolt: rackVolt1,
+                    rackCurrent: rackCurrent1,
+                    moduleInfo: [{
+                        moduleNo: '1',
+                        cellInfo: {
+                            cell1Volt: '1.0',
+                            cell2Volt: '2.0',
+                            cell3Volt: '3.0'
+                        },
+                        temperatureInfo: {
+                            temperature1: '20.1',
+                            temperature2: '20.2',
+                            temperature3: '20.3'
+                        }
+                    },
+                        {
+                            moduleNo: '2',
+                            cellInfo: {
+                                cell1Volt: '1.0',
+                                cell2Volt: '2.0',
+                                cell3Volt: '3.0'
+                            },
+                            temperatureInfo: {
+                                temperature1: '20.1',
+                                temperature2: '20.2',
+                                temperature3: '20.3'
+                            }
+                        }
+                    ]
+                }
+            ]
+        }
+
+        let batteryData = {
+            id: 'M/W2',
+            eventType: 'req',
+            deviceType: 'battery',
+            dataType: 'status',
+            data: rackData
+        };
+
+        console.log("---------------------------------------------");
+        console.log("batteryData : " + JSON.stringify(batteryData));
+        console.log("---------------------------------------------\n\n");
+
+        ws.send(JSON.stringify(batteryData));
+    }
+
+    function sendMonitoringData(index) {
+
+        var pcsTemperature;
+        var pcsHumidity;
+
+        if (index == 0) {
+            pcsTemperature = '11.5';
+            pcsHumidity = '41.2';
+
+        } else {
+            pcsTemperature = '12.2';
+            pcsHumidity = '39.5';
+
+        }
+
+        let sendData = {
+            id: 'M/W2_operationMonitoring',
+            eventType: 'req',
+            deviceType: 'pcs',
+            dataType: 'status',
+            data: {
+                pcsTemperature : pcsTemperature,
+                pcsHumidity : pcsHumidity
+            }
+        };
+
+        console.log("---------------------------------------------");
+        console.log("sendData : " + JSON.stringify(sendData));
+        console.log("---------------------------------------------\n\n");
+
+        ws.send(JSON.stringify(sendData));
+    }
+    
+    function sendPcsInnerSensorData() {
+
+        setTimeout(function(){
+
+            pcsInnerSensorData(0);
+        }, 1000);
+
+        setTimeout(function(){
+
+            pcsInnerSensorData(1);
+        }, 2000);
+
+        setTimeout(function(){
+
+            pcsInnerSensorData(0);
+        }, 3000);
+
+        setTimeout(function(){
+
+            pcsInnerSensorData(1);
+        }, 4000);
+
+        setTimeout(function(){
+
+            pcsInnerSensorData(0);
+        }, 5000);
+
+        setTimeout(function(){
+
+            pcsInnerSensorData(1);
+        }, 6000);
+
+        setTimeout(function(){
+
+            pcsInnerSensorData(0);
+        }, 7000);
+        setTimeout(function(){
+
+            pcsInnerSensorData(1);
+        }, 8000);
+
+        setTimeout(function(){
+
+            pcsInnerSensorData(0);
+        }, 9000);
+        setTimeout(function(){
+
+            pcsInnerSensorData(1);
+        }, 10000);
+    }
+    
+    function sendBatteryInnerSensorData() {
+        setTimeout(function(){
+
+            batteryInnerSensorData(0);
+        }, 1000);
+
+        setTimeout(function(){
+
+            batteryInnerSensorData(1);
+        }, 2000);
+
+        setTimeout(function(){
+
+            batteryInnerSensorData(0);
+        }, 3000);
+
+        setTimeout(function(){
+
+            batteryInnerSensorData(1);
+        }, 4000);
+
+        setTimeout(function(){
+
+            batteryInnerSensorData(0);
+        }, 5000);
+
+        setTimeout(function(){
+
+            batteryInnerSensorData(1);
+        }, 6000);
+
+        setTimeout(function(){
+
+            batteryInnerSensorData(0);
+        }, 7000);
+        setTimeout(function(){
+
+            batteryInnerSensorData(1);
+        }, 8000);
+
+        setTimeout(function(){
+
+            batteryInnerSensorData(0);
+        }, 9000);
+        setTimeout(function(){
+
+            batteryInnerSensorData(1);
+        }, 10000);
+    }
+
+    function pcsInnerSensorData(index) {
+        var pcsTemperature;
+        var pcsHumidity;
+        var pcsIlluminance;
+        var pcsDoor;
+
+        if (index == 0) {
+            pcsTemperature = '20.5';
+            pcsHumidity = '40.2';
+            pcsIlluminance = '10.0';
+            pcsDoor = 'open';
+        } else {
+            pcsTemperature = '21.0';
+            pcsHumidity = '39.9';
+            pcsIlluminance = '9.9';
+            pcsDoor = 'close';
+        }
+
+        let sendData = {
+            id: 'M/W2',
+            eventType: 'req',
+            deviceType: 'pcsInnerSensor',
+            dataType: 'status',
+            data: {
+                pcsTemperature : pcsTemperature,
+                pcsHumidity : pcsHumidity,
+                pcsIlluminance : pcsIlluminance,
+                pcsDoor : pcsDoor
+            }
+        };
+
+        console.log("---------------------------------------------");
+        console.log("sendPcsInnerSensorData : " + JSON.stringify(sendData));
+        console.log("---------------------------------------------\n\n");
+
+        ws.send(JSON.stringify(sendData));
+    }
+
+    function batteryInnerSensorData(index) {
+        var batteryTemperature;
+        var batteryHumidity;
+        var batteryIlluminance;
+        var batteryDoor;
+
+        if (index == 0) {
+            batteryTemperature = '20.5';
+            batteryHumidity = '40.2';
+            batteryIlluminance = '10.0';
+            batteryDoor = 'open';
+        } else {
+            batteryTemperature = '21.0';
+            batteryHumidity = '39.9';
+            batteryIlluminance = '9.9';
+            batteryDoor = 'close';
+        }
+
+        let sendData = {
+            id: 'M/W2',
+            eventType: 'req',
+            deviceType: 'batteryInnerSensor',
+            dataType: 'status',
+            data: {
+                batteryTemperature : batteryTemperature,
+                batteryHumidity : batteryHumidity,
+                batteryIlluminance : batteryIlluminance,
+                batteryDoor : batteryDoor
+            }
+        };
+
+        console.log("---------------------------------------------");
+        console.log("sendBatteryInnerSensorData : " + JSON.stringify(sendData));
+        console.log("---------------------------------------------\n\n");
+
+        ws.send(JSON.stringify(sendData));
+    }
+
+    function disconnect() {
+        ws.close(200, "test");
+
     }
 </script>
 </html>
