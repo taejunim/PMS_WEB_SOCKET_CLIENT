@@ -306,7 +306,7 @@
         var dcBatteryCurr;
 
         if (index == 0) {
-            disChargePower = '11.5';
+            disChargePower = '101.5';
             rSVolt = '41.2';
             upRCurr = '11.2';
             dcLinkVolt = '41.5';
@@ -318,7 +318,7 @@
             upTCurr = '11.3';
             dcBatteryCurr = '11.5';
         } else {
-            disChargePower = '10.5';
+            disChargePower = '100.5';
             rSVolt = '40.2';
             upRCurr = '10.2';
             dcLinkVolt = '40.5';
@@ -337,8 +337,8 @@
             deviceType: 'pcs',
             dataType: 'status',
             data: {
-                operationStatus : 'discharging',
-                faultExistYn : 'N',
+                operationStatus : 'waiting',
+                faultExistYn : 'Y',
                 disChargePower : disChargePower,
                 rSVolt : rSVolt,
                 upRCurr : upRCurr,
@@ -419,7 +419,8 @@
         let rackData = {
             rackInfo: [{
                 rackNo: '1',
-                chargingStatus: 'discharging',
+                faultExistYn: 'Y',
+                chargingStatus: 'charging',
                 soc: soc0,
                 rackVolt: rackVolt0,
                 rackCurrent: rackCurrent0,
@@ -453,7 +454,8 @@
             },
                 {
                     rackNo: '2',
-                    chargingStatus: 'discharging',
+                    faultExistYn: 'N',
+                    chargingStatus: 'charging',
                     soc: soc1,
                     rackVolt: rackVolt1,
                     rackCurrent: rackCurrent1,
