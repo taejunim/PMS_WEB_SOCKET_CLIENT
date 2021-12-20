@@ -71,6 +71,8 @@
 
                         ws.send(JSON.stringify(sendData));
 
+                        sendStatusData(receivedData.data.controlType, receivedData.data.controlValue);
+
                         break;
                     default:
                 }
@@ -139,105 +141,105 @@
         console.log("---------------------------------------------\n\n");
     }
 
-    function sendStatusData() {
+    function sendStatusData(controlType, controlValue) {
         setTimeout(function(){
 
-            sendPcsData(0);
+            sendPcsData(0, controlType, controlValue);
         }, 1000);
 
         setTimeout(function(){
 
-            sendPcsData(1);
+            sendPcsData(1 , controlType, controlValue);
         }, 2000);
 
         setTimeout(function(){
 
-            sendPcsData(0);
+            sendPcsData(0 , controlType, controlValue);
         }, 3000);
 
         setTimeout(function(){
 
-            sendPcsData(1);
+            sendPcsData(1 , controlType, controlValue);
         }, 4000);
 
         setTimeout(function(){
 
-            sendPcsData(0);
+            sendPcsData(0 , controlType, controlValue);
         }, 5000);
 
         setTimeout(function(){
 
-            sendPcsData(1);
+            sendPcsData(1 , controlType, controlValue);
         }, 6000);
 
         setTimeout(function(){
 
-            sendPcsData(0);
+            sendPcsData(0 , controlType, controlValue);
         }, 7000);
         setTimeout(function(){
 
-            sendPcsData(1);
+            sendPcsData(1 , controlType, controlValue);
         }, 8000);
 
         setTimeout(function(){
 
-            sendPcsData(0);
+            sendPcsData(0 , controlType, controlValue);
         }, 9000);
         setTimeout(function(){
 
-            sendPcsData(1);
+            sendPcsData(1 , controlType, controlValue);
         }, 10000);
 
 
         //Battery
         setTimeout(function(){
 
-            sendBatteryData(0);
+            sendBatteryData(0 , controlType, controlValue);
         }, 1000);
 
         setTimeout(function(){
 
-            sendBatteryData(1);
+            sendBatteryData(1 , controlType, controlValue);
         }, 2000);
 
         setTimeout(function(){
 
-            sendBatteryData(2);
+            sendBatteryData(2 , controlType, controlValue);
         }, 3000);
 
         setTimeout(function(){
 
-            sendBatteryData(3);
+            sendBatteryData(3 , controlType, controlValue);
         }, 4000);
 
         setTimeout(function(){
 
-            sendBatteryData(4);
+            sendBatteryData(4 , controlType, controlValue);
         }, 5000);
 
         setTimeout(function(){
 
-            sendBatteryData(3);
+            sendBatteryData(3 , controlType, controlValue);
         }, 6000);
 
         setTimeout(function(){
 
-            sendBatteryData(2);
+            sendBatteryData(2 , controlType, controlValue);
         }, 7000);
 
         setTimeout(function(){
 
-            sendBatteryData(1);
+            sendBatteryData(1 , controlType, controlValue);
         }, 8000);
 
         setTimeout(function(){
 
-            sendBatteryData(0);
+            sendBatteryData(0 , controlType, controlValue);
         }, 9000);
 
         setTimeout(function(){
 
-            sendBatteryData(4);
+            sendBatteryData(4 , controlType, controlValue);
         }, 10000);
     }
 
@@ -291,7 +293,7 @@
         }, 10000);
     }
 
-    function sendPcsData(index) {
+    function sendPcsData(index, controlType, controlValue) {
 
         var disChargePower;
         var rSVolt;
@@ -337,9 +339,9 @@
             deviceType: 'pcs',
             dataType: 'status',
             data: {
-                operationStatus : 'waiting',
+                operationStatus : controlType == undefined ? 'charging' : controlType,
                 faultExistYn : 'Y',
-                disChargePower : disChargePower,
+                disChargePower : controlValue == undefined ? disChargePower : controlValue,
                 rSVolt : rSVolt,
                 upRCurr : upRCurr,
                 dcLinkVolt : dcLinkVolt,
@@ -360,7 +362,7 @@
         ws.send(JSON.stringify(sendData));
     }
 
-    function sendBatteryData(index) {
+    function sendBatteryData(index, controlType, controlValue) {
 
         var soc0;
         var rackVolt0;
@@ -420,7 +422,7 @@
             rackInfo: [{
                 rackNo: '1',
                 faultExistYn: 'Y',
-                chargingStatus: 'charging',
+                chargingStatus: controlType  == undefined ? 'charging' : controlType,
                 soc: soc0,
                 rackVolt: rackVolt0,
                 rackCurrent: rackCurrent0,
@@ -455,7 +457,7 @@
                 {
                     rackNo: '2',
                     faultExistYn: 'N',
-                    chargingStatus: 'charging',
+                    chargingStatus: controlType  == undefined ? 'charging' : controlType,
                     soc: soc1,
                     rackVolt: rackVolt1,
                     rackCurrent: rackCurrent1,
