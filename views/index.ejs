@@ -18,14 +18,14 @@
 
     ws.onopen = (event) => {
         console.log("---------------------------------------------");
-        let sendData = {id: 'M/W2', eventType: 'req', deviceType: 'middleware', dataType: 'connect'};
+        let sendData = {id: 'M/W001', eventType: 'req', deviceType: 'middleware', dataType: 'connect'};
         ws.send(JSON.stringify(sendData));
         console.log("---------------------------------------------\n\n");
     }
 
     ws.onmessage = (event) => {
         console.log("---------------------------------------------");
-        console.log("M/W2 : Data Received From Server");
+        console.log("M/W001 : Data Received From Server");
 
         let receivedData = JSON.parse(event.data);
 
@@ -38,24 +38,24 @@
                     case 'status':
                         console.log('              status                ');
                         console.log(event.data);
-                        console.log('M/W2 id : ' + receivedData.id);
-                        console.log('M/W2 eventType : ' + receivedData.eventType);
-                        console.log('M/W2 dataType : ' + receivedData.dataType);
-                        console.log('M/W2 result : ' + receivedData.result);
-                        console.log('M/W2 message : ' + receivedData.message);
+                        console.log('M/W001 id : ' + receivedData.id);
+                        console.log('M/W001 eventType : ' + receivedData.eventType);
+                        console.log('M/W001 dataType : ' + receivedData.dataType);
+                        console.log('M/W001 result : ' + receivedData.result);
+                        console.log('M/W001 message : ' + receivedData.message);
                         break;
 
                     case 'control':
                         console.log('              control                ');
                         console.log(event.data);
-                        console.log('M/W2 id : ' + receivedData.id);
-                        console.log('M/W2 eventType : ' + receivedData.eventType);
-                        console.log('M/W2 deviceType : ' + receivedData.deviceType);
-                        console.log('M/W2 dataType : ' + receivedData.dataType);
-                        console.log('M/W2 data : ' + receivedData.data);
-                        console.log('M/W2 targetId : ' + receivedData.data.targetId);
-                        console.log('M/W2 controlType : ' + receivedData.data.controlType);
-                        console.log('M/W2 controlValue : ' + receivedData.data.controlValue);
+                        console.log('M/W001 id : ' + receivedData.id);
+                        console.log('M/W001 eventType : ' + receivedData.eventType);
+                        console.log('M/W001 deviceType : ' + receivedData.deviceType);
+                        console.log('M/W001 dataType : ' + receivedData.dataType);
+                        console.log('M/W001 data : ' + receivedData.data);
+                        console.log('M/W001 targetId : ' + receivedData.data.targetId);
+                        console.log('M/W001 controlType : ' + receivedData.data.controlType);
+                        console.log('M/W001 controlValue : ' + receivedData.data.controlValue);
 
                         let sendData = {
                             id: receivedData.id,
@@ -83,34 +83,34 @@
                     case 'connect':
                         console.log('              connect                ');
                         console.log(event.data);
-                        console.log('M/W2 id : ' + receivedData.id);
-                        console.log('M/W2 eventType : ' + receivedData.eventType);
-                        console.log('M/W2 dataType : ' + receivedData.dataType);
-                        console.log('M/W2 result : ' + receivedData.result);
-                        console.log('M/W2 message : ' + receivedData.message);
+                        console.log('M/W001 id : ' + receivedData.id);
+                        console.log('M/W001 eventType : ' + receivedData.eventType);
+                        console.log('M/W001 dataType : ' + receivedData.dataType);
+                        console.log('M/W001 result : ' + receivedData.result);
+                        console.log('M/W001 message : ' + receivedData.message);
                         break;
 
                     case 'status':
                         console.log('              status                ');
                         console.log(event.data);
-                        console.log('M/W2 id : ' + receivedData.id);
-                        console.log('M/W2 eventType : ' + receivedData.eventType);
-                        console.log('M/W2 dataType : ' + receivedData.dataType);
-                        console.log('M/W2 result : ' + receivedData.result);
-                        console.log('M/W2 message : ' + receivedData.message);
+                        console.log('M/W001 id : ' + receivedData.id);
+                        console.log('M/W001 eventType : ' + receivedData.eventType);
+                        console.log('M/W001 dataType : ' + receivedData.dataType);
+                        console.log('M/W001 result : ' + receivedData.result);
+                        console.log('M/W001 message : ' + receivedData.message);
                         break;
 
                     case 'control':
                         console.log('              control                ');
                         console.log(event.data);
-                        console.log('M/W2 id : ' + receivedData.id);
-                        console.log('M/W2 eventType : ' + receivedData.eventType);
-                        console.log('M/W2 deviceType : ' + receivedData.deviceType);
-                        console.log('M/W2 dataType : ' + receivedData.dataType);
-                        console.log('M/W2 data : ' + receivedData.data);
-                        console.log('M/W2 targetId : ' + receivedData.data.targetId);
-                        console.log('M/W2 controlType : ' + receivedData.data.controlType);
-                        console.log('M/W2 controlValue : ' + receivedData.data.controlValue);
+                        console.log('M/W001 id : ' + receivedData.id);
+                        console.log('M/W001 eventType : ' + receivedData.eventType);
+                        console.log('M/W001 deviceType : ' + receivedData.deviceType);
+                        console.log('M/W001 dataType : ' + receivedData.dataType);
+                        console.log('M/W001 data : ' + receivedData.data);
+                        console.log('M/W001 targetId : ' + receivedData.data.targetId);
+                        console.log('M/W001 controlType : ' + receivedData.data.controlType);
+                        console.log('M/W001 controlValue : ' + receivedData.data.controlValue);
 
                         let sendData = {
                             id: receivedData.id,
@@ -332,7 +332,7 @@
         }
 
         let sendData = {
-            id: 'M/W2',
+            id: 'M/W001',
             eventType: 'req',
             deviceType: 'pcs',
             dataType: 'status',
@@ -491,7 +491,7 @@
         }
 
         let batteryData = {
-            id: 'M/W2',
+            id: 'M/W001',
             eventType: 'req',
             deviceType: 'battery',
             dataType: 'status',
@@ -521,7 +521,7 @@
         }
 
         let sendData = {
-            id: 'M/W2_operationMonitoring',
+            id: 'M/W001_operationMonitoring',
             eventType: 'req',
             deviceType: 'pcs',
             dataType: 'status',
@@ -658,7 +658,7 @@
         }
 
         let sendData = {
-            id: 'M/W2',
+            id: 'M/W001',
             eventType: 'req',
             deviceType: 'pcsInnerSensor',
             dataType: 'status',
@@ -696,7 +696,7 @@
         }
 
         let sendData = {
-            id: 'M/W2',
+            id: 'M/W001',
             eventType: 'req',
             deviceType: 'batteryInnerSensor',
             dataType: 'status',
