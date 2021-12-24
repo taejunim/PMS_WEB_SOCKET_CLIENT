@@ -8,7 +8,6 @@
 <body>
 
 <input type="button" value="main data" onclick="sendStatusData()">
-<input type="button" value="monitoring data" onclick="sendOperationMonitoringData()">
 <input type="button" value="pcsInnerSensor data" onclick="sendPcsInnerSensorData()">
 <input type="button" value="batteryInnerSensor data" onclick="sendBatteryInnerSensorData()">
 </body>
@@ -243,56 +242,6 @@
         }, 10000);
     }
 
-    function sendOperationMonitoringData() {
-        setTimeout(function(){
-
-            sendMonitoringData(0);
-        }, 1000);
-
-        setTimeout(function(){
-
-            sendMonitoringData(1);
-        }, 2000);
-
-        setTimeout(function(){
-
-            sendMonitoringData(0);
-        }, 3000);
-
-        setTimeout(function(){
-
-            sendMonitoringData(1);
-        }, 4000);
-
-        setTimeout(function(){
-
-            sendMonitoringData(0);
-        }, 5000);
-
-        setTimeout(function(){
-
-            sendMonitoringData(1);
-        }, 6000);
-
-        setTimeout(function(){
-
-            sendMonitoringData(0);
-        }, 7000);
-        setTimeout(function(){
-
-            sendMonitoringData(1);
-        }, 8000);
-
-        setTimeout(function(){
-
-            sendMonitoringData(0);
-        }, 9000);
-        setTimeout(function(){
-
-            sendMonitoringData(1);
-        }, 10000);
-    }
-
     function sendPcsData(index, controlType, controlValue) {
 
         var disChargePower;
@@ -339,7 +288,7 @@
             deviceType: 'pcs',
             dataType: 'status',
             data: {
-                operationStatus : controlType == undefined ? 'charging' : controlType,
+                operationStatus : controlType == undefined ? 'discharging' : controlType,
                 faultExistYn : 'Y',
                 disChargePower : controlValue == undefined ? disChargePower : controlValue,
                 rSVolt : rSVolt,
@@ -507,39 +456,6 @@
         ws.send(JSON.stringify(batteryData));
     }
 
-    function sendMonitoringData(index) {
-
-        var pcsTemperature;
-        var pcsHumidity;
-
-        if (index == 0) {
-            pcsTemperature = '11.5';
-            pcsHumidity = '41.2';
-
-        } else {
-            pcsTemperature = '12.2';
-            pcsHumidity = '39.5';
-
-        }
-
-        let sendData = {
-            id: 'M/W001_operationMonitoring',
-            eventType: 'req',
-            deviceType: 'pcs',
-            dataType: 'status',
-            data: {
-                pcsTemperature : pcsTemperature,
-                pcsHumidity : pcsHumidity
-            }
-        };
-
-        console.log("---------------------------------------------");
-        console.log("sendData : " + JSON.stringify(sendData));
-        console.log("---------------------------------------------\n\n");
-
-        ws.send(JSON.stringify(sendData));
-    }
-    
     function sendPcsInnerSensorData() {
 
         setTimeout(function(){
