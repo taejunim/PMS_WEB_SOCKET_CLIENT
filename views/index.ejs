@@ -255,6 +255,8 @@
         var tRVolt;
         var upTCurr;
         var dcBatteryCurr;
+        var faultExistYn;
+        var faultList;
 
         if (index == 0) {
             disChargePower = '101.5';
@@ -268,6 +270,8 @@
             tRVolt = '42.2';
             upTCurr = '11.3';
             dcBatteryCurr = '11.5';
+            faultExistYn = 'N';
+            faultList = [{"errorName":"Power stack short circuit Trip"},{"errorName":"Controller A/D Converter Line Offset Trip (Current part)"},{"errorName":"Controller Fault"},{"errorName":"Controller Fault"},{"errorName":"Controller Fault"},{"errorName":"Controller Fault"},{"errorName":"Controller Fault"},{"errorName":"Controller Fault"},{"errorName":"Controller Fault11"},{"errorName":"Controller Fault121313"},{"errorName":"Controller Fault"}];
         } else {
             disChargePower = '100.5';
             rSVolt = '40.2';
@@ -280,6 +284,8 @@
             tRVolt = '41.2';
             upTCurr = '10.3';
             dcBatteryCurr = '10.5';
+            faultExistYn = 'N';
+            faultList = [{"errorName":"Power stack short circuit Trip"},{"errorName":"Controller A/D Converter Line Offset Trip (Current part)"},{"errorName":"Controller Fault"},{"errorName":"Controller Fault"},{"errorName":"Controller Fault"},{"errorName":"Controller Fault"},{"errorName":"Controller Fault"},{"errorName":"Controller Fault"},{"errorName":"Controller Fault11"},{"errorName":"Controller Fault121313"},{"errorName":"Controller Fault"}];
         }
 
         let sendData = {
@@ -289,7 +295,7 @@
             dataType: 'status',
             data: {
                 operationStatus : controlType == undefined ? 'discharging' : controlType,
-                faultExistYn : 'Y',
+                faultExistYn : faultExistYn,
                 disChargePower : controlValue == undefined ? disChargePower : controlValue,
                 rSVolt : rSVolt,
                 upRCurr : upRCurr,
@@ -300,7 +306,8 @@
                 dcBatteryVolt : dcBatteryVolt,
                 tRVolt : tRVolt,
                 upTCurr : upTCurr,
-                dcBatteryCurr : dcBatteryCurr
+                dcBatteryCurr : dcBatteryCurr,
+                faultList : faultList
             }
         };
 
@@ -370,7 +377,7 @@
         let rackData = {
             rackInfo: [{
                 rackNo: '1',
-                faultExistYn: 'Y',
+                faultExistYn: 'N',
                 chargingStatus: controlType  == undefined ? 'charging' : controlType,
                 soc: soc0,
                 rackVolt: rackVolt0,
@@ -562,17 +569,20 @@
         var pcsHumidity;
         var pcsIlluminance;
         var pcsDoor;
+        var faultExistYn;
 
         if (index == 0) {
             pcsTemperature = '20.5';
             pcsHumidity = '40.2';
             pcsIlluminance = '10.0';
             pcsDoor = 'open';
+            faultExistYn = 'Y';
         } else {
             pcsTemperature = '21.0';
             pcsHumidity = '39.9';
             pcsIlluminance = '9.9';
             pcsDoor = 'close';
+            faultExistYn = 'N';
         }
 
         let sendData = {
@@ -584,7 +594,8 @@
                 pcsTemperature : pcsTemperature,
                 pcsHumidity : pcsHumidity,
                 pcsIlluminance : pcsIlluminance,
-                pcsDoor : pcsDoor
+                pcsDoor : pcsDoor,
+                faultExistYn : faultExistYn
             }
         };
 
@@ -600,17 +611,20 @@
         var batteryHumidity;
         var batteryIlluminance;
         var batteryDoor;
+        var faultExistYn;
 
         if (index == 0) {
             batteryTemperature = '20.5';
             batteryHumidity = '40.2';
             batteryIlluminance = '10.0';
             batteryDoor = 'open';
+            faultExistYn = 'N';
         } else {
             batteryTemperature = '21.0';
             batteryHumidity = '39.9';
             batteryIlluminance = '9.9';
             batteryDoor = 'close';
+            faultExistYn = 'Y';
         }
 
         let sendData = {
@@ -622,7 +636,8 @@
                 batteryTemperature : batteryTemperature,
                 batteryHumidity : batteryHumidity,
                 batteryIlluminance : batteryIlluminance,
-                batteryDoor : batteryDoor
+                batteryDoor : batteryDoor,
+                faultExistYn : faultExistYn
             }
         };
 
