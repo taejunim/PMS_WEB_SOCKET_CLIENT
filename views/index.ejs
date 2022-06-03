@@ -271,7 +271,7 @@
             upTCurr = '11.3';
             dcBatteryCurr = '11.5';
             faultExistYn = 'N';
-            faultList = [{"errorName":"Power stack short circuit Trip"},{"errorName":"Controller A/D Converter Line Offset Trip (Current part)"},{"errorName":"Controller Fault"},{"errorName":"Controller Fault"},{"errorName":"Controller Fault"},{"errorName":"Controller Fault"},{"errorName":"Controller Fault"},{"errorName":"Controller Fault"},{"errorName":"Controller Fault11"},{"errorName":"Controller Fault121313"},{"errorName":"Controller Fault"}];
+            faultList = [{"errorName":"Power stack short circuit Trip"},{"errorName":"Controller A/D Converter Line Offset Trip (Current part)"},{"errorName":"Controller Fault"},{"errorName":"Controller Fault"},{"errorName":"Controller Fault"},{"errorName":"Controller Fault"},{"errorName":"Controller Fault"},{"errorName":"Controller Fault"},{"errorName":"Controller Fault11"},{"errorName":"Controller Fault121313"}];
         } else {
             disChargePower = '100.5';
             rSVolt = '40.2';
@@ -328,6 +328,10 @@
         var rackVolt1;
         var rackCurrent1;
 
+        var soc2;
+        var rackVolt2;
+        var rackCurrent2;
+
         if (index == 0) {
             soc0 = '22.2';
             rackVolt0 = '23.1';
@@ -336,6 +340,10 @@
             soc1 = '96.9';
             rackVolt1 = '23.9';
             rackCurrent1 = '11.9';
+
+            soc2 = '26.9';
+            rackVolt2 = '21.9';
+            rackCurrent2 = '91.9';
 
         } else if (index == 1) {
             soc0 = '48.9';
@@ -346,6 +354,10 @@
             rackVolt1 = '23.9';
             rackCurrent1 = '11.9';
 
+            soc2 = '36.9';
+            rackVolt2 = '77.7';
+            rackCurrent2 = '41.9';
+
         } else if (index == 2) {
             soc0 = '50.1';
             rackVolt0 = '23.1';
@@ -354,6 +366,10 @@
             soc1 = '50.1';
             rackVolt1 = '23.9';
             rackCurrent1 = '11.9';
+
+            soc2 = '22.9';
+            rackVolt2 = '20.1';
+            rackCurrent2 = '13.8';
 
         } else if (index == 3) {
             soc0 = '76.9';
@@ -364,6 +380,10 @@
             rackVolt1 = '23.9';
             rackCurrent1 = '11.9';
 
+            soc2 = '31.1';
+            rackVolt2 = '20.0';
+            rackCurrent2 = '11.8';
+
         } else {
             soc0 = '96.9';
             rackVolt0 = '22.3';
@@ -372,6 +392,10 @@
             soc1 = '22.2';
             rackVolt1 = '23.8';
             rackCurrent1 = '11.8';
+
+            soc2 = '24.9';
+            rackVolt2 = '20.2';
+            rackCurrent2 = '12.1';
         }
 
         let rackData = {
@@ -444,6 +468,41 @@
                             }
                         }
                     ]
+                },
+                {
+                    rackNo: '3',
+                    faultExistYn: 'N',
+                    chargingStatus: controlType  == undefined ? 'charging' : controlType,
+                    soc: soc2,
+                    rackVolt: rackVolt2,
+                    rackCurrent: rackCurrent2,
+                    moduleInfo: [{
+                        moduleNo: '1',
+                        cellInfo: {
+                            cell1Volt: '1.0',
+                            cell2Volt: '2.0',
+                            cell3Volt: '3.0'
+                        },
+                        temperatureInfo: {
+                            temperature1: '20.1',
+                            temperature2: '20.2',
+                            temperature3: '20.3'
+                        }
+                    },
+                        {
+                            moduleNo: '2',
+                            cellInfo: {
+                                cell1Volt: '1.0',
+                                cell2Volt: '2.0',
+                                cell3Volt: '3.0'
+                            },
+                            temperatureInfo: {
+                                temperature1: '20.1',
+                                temperature2: '20.2',
+                                temperature3: '20.3'
+                            }
+                        }
+                    ]
                 }
             ]
         }
@@ -477,41 +536,45 @@
 
         setTimeout(function(){
 
-            pcsInnerSensorData(0);
+            pcsInnerSensorData(2);
         }, 3000);
 
         setTimeout(function(){
 
-            pcsInnerSensorData(1);
+            pcsInnerSensorData(3);
         }, 4000);
 
         setTimeout(function(){
 
-            pcsInnerSensorData(0);
+            pcsInnerSensorData(4);
         }, 5000);
 
         setTimeout(function(){
 
-            pcsInnerSensorData(1);
+            pcsInnerSensorData(5);
         }, 6000);
 
         setTimeout(function(){
 
-            pcsInnerSensorData(0);
+            pcsInnerSensorData(6);
         }, 7000);
         setTimeout(function(){
 
-            pcsInnerSensorData(1);
+            pcsInnerSensorData(7);
         }, 8000);
 
         setTimeout(function(){
 
-            pcsInnerSensorData(0);
+            pcsInnerSensorData(8);
         }, 9000);
         setTimeout(function(){
 
-            pcsInnerSensorData(1);
+            pcsInnerSensorData(9);
         }, 10000);
+        setTimeout(function(){
+
+            batteryInnerSensorData(10);
+        }, 11000);
     }
     
     function sendBatteryInnerSensorData() {
@@ -527,62 +590,133 @@
 
         setTimeout(function(){
 
-            batteryInnerSensorData(0);
+            batteryInnerSensorData(2);
         }, 3000);
 
         setTimeout(function(){
 
-            batteryInnerSensorData(1);
+            batteryInnerSensorData(3);
         }, 4000);
 
         setTimeout(function(){
 
-            batteryInnerSensorData(0);
+            batteryInnerSensorData(4);
         }, 5000);
 
         setTimeout(function(){
 
-            batteryInnerSensorData(1);
+            batteryInnerSensorData(5);
         }, 6000);
 
         setTimeout(function(){
 
-            batteryInnerSensorData(0);
+            batteryInnerSensorData(6);
         }, 7000);
         setTimeout(function(){
 
-            batteryInnerSensorData(1);
+            batteryInnerSensorData(7);
         }, 8000);
 
         setTimeout(function(){
 
-            batteryInnerSensorData(0);
+            batteryInnerSensorData(8);
         }, 9000);
         setTimeout(function(){
 
-            batteryInnerSensorData(1);
+            batteryInnerSensorData(9);
         }, 10000);
+        setTimeout(function(){
+
+            batteryInnerSensorData(10);
+        }, 11000);
+
     }
 
     function pcsInnerSensorData(index) {
-        var pcsTemperature;
-        var pcsHumidity;
-        var pcsIlluminance;
-        var pcsDoor;
+        var pmsCode;
+        var essCode;
+        var deviceCode;
+        var deviceName;
         var faultExistYn;
+        var measures;
 
         if (index == 0) {
-            pcsTemperature = '20.5';
-            pcsHumidity = '40.2';
-            pcsIlluminance = '10.0';
-            pcsDoor = 'open';
-            faultExistYn = 'Y';
-        } else {
-            pcsTemperature = '21.0';
-            pcsHumidity = '39.9';
-            pcsIlluminance = '9.9';
-            pcsDoor = 'close';
+            pmsCode = 'P001';
+            essCode = 'E001';
+            deviceCode = '0401';
+            deviceName = '온도 센서 [PCS]';
             faultExistYn = 'N';
+            measures = '29.8';
+        } else if (index == 1) {
+            pmsCode = 'P001';
+            essCode = 'E001';
+            deviceCode = '0601';
+            deviceName = '습도 센서 [PCS]';
+            faultExistYn = 'N';
+            measures = '7.8';
+        } else if (index == 2) {
+            pmsCode = 'P001';
+            essCode = 'E001';
+            deviceCode = '0801';
+            deviceName = '조도 센서 [PCS]';
+            faultExistYn = 'N';
+            measures = '9.8';
+        } else if (index == 3) {
+            pmsCode = 'P001';
+            essCode = 'E001';
+            deviceCode = '1001';
+            deviceName = '도어 센서 [PCS]';
+            faultExistYn = 'N';
+            measures = '1';
+        } else if (index == 4) {
+            pmsCode = 'P001';
+            essCode = 'E001';
+            deviceCode = '1001';
+            deviceName = '도어 센서 [PCS]';
+            faultExistYn = 'Y';
+            measures = '1';
+        } else if (index == 5) {
+            pmsCode = 'P001';
+            essCode = 'E001';
+            deviceCode = '1001';
+            deviceName = '도어 센서 [PCS]';
+            faultExistYn = 'N';
+            measures = '0';
+        } else if (index == 6) {
+            pmsCode = 'P001';
+            essCode = 'E001';
+            deviceCode = '1001';
+            deviceName = '도어 센서 [PCS]';
+            faultExistYn = 'Y';
+            measures = '1';
+        } else if (index == 7) {
+            pmsCode = 'P001';
+            essCode = 'E001';
+            deviceCode = '0801';
+            deviceName = '조도 센서 [PCS]';
+            faultExistYn = 'N';
+            measures = '10.7';
+        } else if (index == 8) {
+            pmsCode = 'P001';
+            essCode = 'E001';
+            deviceCode = '1001';
+            deviceName = '도어 센서 [PCS]';
+            faultExistYn = 'N';
+            measures = '1';
+        } else if (index == 9) {
+            pmsCode = 'P001';
+            essCode = 'E001';
+            deviceCode = '0401';
+            deviceName = '온도 센서 [PCS]';
+            faultExistYn = 'Y';
+            measures = '-';
+        } else if (index == 10) {
+            pmsCode = 'P001';
+            essCode = 'E001';
+            deviceCode = '0801';
+            deviceName = '조도 센서 [PCS]';
+            faultExistYn = 'Y';
+            measures = '1';
         }
 
         let sendData = {
@@ -591,11 +725,12 @@
             deviceType: 'pcsInnerSensor',
             dataType: 'status',
             data: {
-                pcsTemperature : pcsTemperature,
-                pcsHumidity : pcsHumidity,
-                pcsIlluminance : pcsIlluminance,
-                pcsDoor : pcsDoor,
-                faultExistYn : faultExistYn
+                pmsCode : pmsCode,
+                essCode : essCode,
+                deviceCode : deviceCode,
+                deviceName : deviceName,
+                faultExistYn : faultExistYn,
+                measures : measures
             }
         };
 
@@ -607,37 +742,103 @@
     }
 
     function batteryInnerSensorData(index) {
-        var batteryTemperature;
-        var batteryHumidity;
-        var batteryIlluminance;
-        var batteryDoor;
+        var pmsCode;
+        var essCode;
+        var deviceCode;
+        var deviceName;
         var faultExistYn;
+        var measures;
 
         if (index == 0) {
-            batteryTemperature = '20.5';
-            batteryHumidity = '40.2';
-            batteryIlluminance = '10.0';
-            batteryDoor = 'open';
+            pmsCode = 'P001';
+            essCode = 'E001';
+            deviceCode = '0501';
+            deviceName = '온도 센서 [배터리]';
             faultExistYn = 'N';
-        } else {
-            batteryTemperature = '21.0';
-            batteryHumidity = '39.9';
-            batteryIlluminance = '9.9';
-            batteryDoor = 'close';
+            measures = '29.8';
+        } else if (index == 1) {
+            pmsCode = 'P001';
+            essCode = 'E001';
+            deviceCode = '0701';
+            deviceName = '습도 센서 [배터리]';
+            faultExistYn = 'N';
+            measures = '29.8';
+        } else if (index == 2) {
+            pmsCode = 'P001';
+            essCode = 'E001';
+            deviceCode = '0901';
+            deviceName = '조도 센서 [배터리]';
+            faultExistYn = 'N';
+            measures = '29.8';
+        } else if (index == 3) {
+            pmsCode = 'P001';
+            essCode = 'E001';
+            deviceCode = '1101';
+            deviceName = '도어 센서 [배터리]';
+            faultExistYn = 'N';
+            measures = '1';
+        } else if (index == 4) {
+            pmsCode = 'P001';
+            essCode = 'E001';
+            deviceCode = '1101';
+            deviceName = '도어 센서 [배터리]';
             faultExistYn = 'Y';
+            measures = '1';
+        } else if (index == 5) {
+            pmsCode = 'P001';
+            essCode = 'E001';
+            deviceCode = '1101';
+            deviceName = '도어 센서 [배터리]';
+            faultExistYn = 'N';
+            measures = '0';
+        } else if (index == 6) {
+            pmsCode = 'P001';
+            essCode = 'E001';
+            deviceCode = '1101';
+            deviceName = '도어 센서 [배터리]';
+            faultExistYn = 'N';
+            measures = '1';
+        } else if (index == 7) {
+            pmsCode = 'P001';
+            essCode = 'E001';
+            deviceCode = '0901';
+            deviceName = '조도 센서 [배터리]';
+            faultExistYn = 'N';
+            measures = '10';
+        } else if (index == 8) {
+            pmsCode = 'P001';
+            essCode = 'E001';
+            deviceCode = '1101';
+            deviceName = '도어 센서 [배터리]';
+            faultExistYn = 'N';
+            measures = '1';
+        } else if (index == 9) {
+            pmsCode = 'P001';
+            essCode = 'E001';
+            deviceCode = '0501';
+            deviceName = '온도 센서 [배터리]';
+            faultExistYn = 'Y';
+            measures = '-';
+        } else if (index == 10) {
+            pmsCode = 'P001';
+            essCode = 'E001';
+            deviceCode = '0901';
+            deviceName = '조도 센서 [배터리]';
+            faultExistYn = 'Y';
+            measures = '1';
         }
-
         let sendData = {
             id: 'M/W001',
             eventType: 'req',
             deviceType: 'batteryInnerSensor',
             dataType: 'status',
             data: {
-                batteryTemperature : batteryTemperature,
-                batteryHumidity : batteryHumidity,
-                batteryIlluminance : batteryIlluminance,
-                batteryDoor : batteryDoor,
-                faultExistYn : faultExistYn
+                pmsCode : pmsCode,
+                essCode : essCode,
+                deviceCode : deviceCode,
+                deviceName : deviceName,
+                faultExistYn : faultExistYn,
+                measures : measures
             }
         };
 
