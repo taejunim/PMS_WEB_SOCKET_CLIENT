@@ -12,8 +12,11 @@
 <input type="button" value="batteryInnerSensor data" onclick="sendBatteryInnerSensorData()">
 </body>
 <script>
-    var ws = new WebSocket('ws://localhost:3100');
+    //var ws = new WebSocket('ws://localhost:3100');
     //var ws = new WebSocket('ws://101.101.216.193:3100');
+    //var ws = new WebSocket('ws://14.39.99.148:7003'); // Server
+    var ws = new WebSocket('ws://172.30.1.31:3100'); // Server
+
 
     ws.onopen = (event) => {
         console.log("---------------------------------------------");
