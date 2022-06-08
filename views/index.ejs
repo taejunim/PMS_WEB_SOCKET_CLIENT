@@ -271,7 +271,7 @@
             upTCurr = '11.3';
             dcBatteryCurr = '11.5';
             faultExistYn = 'N';
-            faultList = [{"errorName":"Power stack short circuit Trip"},{"errorName":"Controller A/D Converter Line Offset Trip (Current part)"},{"errorName":"Controller Fault"},{"errorName":"Controller Fault"},{"errorName":"Controller Fault"},{"errorName":"Controller Fault"},{"errorName":"Controller Fault"},{"errorName":"Controller Fault"},{"errorName":"Controller Fault11"},{"errorName":"Controller Fault121313"}];
+            faultList = [{"errorCode": "10", "errorName":"Power stack short circuit Trip"},{"errorCode": "20","errorName":"Controller A/D Converter Line Offset Trip (Current part)"},{"errorCode": "30","errorName":"Controller Fault"},{"errorCode": "20","errorName":"Controller Fault"},{"errorCode": "20","errorName":"Controller Fault"},{"errorCode": "20","errorName":"Controller Fault"},{"errorCode": "20","errorName":"Controller Fault"},{"errorCode": "20","errorName":"Controller Fault"},{"errorCode": "20","errorName":"Controller Fault11"},{"errorCode": "20","errorName":"Controller Fault121313"}];
         } else {
             disChargePower = '100.5';
             rSVolt = '40.2';
@@ -285,7 +285,7 @@
             upTCurr = '10.3';
             dcBatteryCurr = '10.5';
             faultExistYn = 'N';
-            faultList = [{"errorName":"Power stack short circuit Trip"},{"errorName":"Controller A/D Converter Line Offset Trip (Current part)"},{"errorName":"Controller Fault"},{"errorName":"Controller Fault"},{"errorName":"Controller Fault"},{"errorName":"Controller Fault"},{"errorName":"Controller Fault"},{"errorName":"Controller Fault"},{"errorName":"Controller Fault11"},{"errorName":"Controller Fault121313"},{"errorName":"Controller Fault"}];
+            faultList = [{"errorCode": "20","errorName":"Power stack short circuit Trip"},{"errorCode": "20","errorName":"Controller A/D Converter Line Offset Trip (Current part)"},{"errorCode": "20","errorName":"Controller Fault"},{"errorCode": "20","errorName":"Controller Fault"},{"errorCode": "20","errorName":"Controller Fault"},{"errorCode": "20","errorName":"Controller Fault"},{"errorCode": "20","errorName":"Controller Fault"},{"errorCode": "20","errorName":"Controller Fault"},{"errorCode": "20","errorName":"Controller Fault11"},{"errorCode": "20","errorName":"Controller Fault121313"},{"errorCode": "20","errorName":"Controller Fault"}];
         }
 
         let sendData = {
@@ -323,189 +323,61 @@
         var soc0;
         var rackVolt0;
         var rackCurrent0;
-
-        var soc1;
-        var rackVolt1;
-        var rackCurrent1;
-
-        var soc2;
-        var rackVolt2;
-        var rackCurrent2;
+        var faultList0;
+        var faultExistYn0;
+        var rackNo0;
 
         if (index == 0) {
+            rackNo0 = '1';
+            faultExistYn0 = 'Y';
             soc0 = '22.2';
             rackVolt0 = '23.1';
             rackCurrent0 = '11.1';
-
-            soc1 = '96.9';
-            rackVolt1 = '23.9';
-            rackCurrent1 = '11.9';
-
-            soc2 = '26.9';
-            rackVolt2 = '21.9';
-            rackCurrent2 = '91.9';
+            faultList0 = [{"errorCode":"batteryError", "errorName":"batteryRack1Error"},{"errorCode":"batteryError", "errorName":"batteryRack1Error01"},{"errorCode":"batteryError", "errorName":"batteryRack1Error2222222"}];
 
         } else if (index == 1) {
+            rackNo0 = '3';
+            faultExistYn0 = 'Y';
             soc0 = '48.9';
             rackVolt0 = '23.1';
             rackCurrent0 = '11.1';
-
-            soc1 = '76.9';
-            rackVolt1 = '23.9';
-            rackCurrent1 = '11.9';
-
-            soc2 = '36.9';
-            rackVolt2 = '77.7';
-            rackCurrent2 = '41.9';
+            faultList0 = [{"errorCode":"batteryError", "errorName":"batteryRack3"},{"errorCode":"batteryError", "errorName":"batteryRack3"}];
 
         } else if (index == 2) {
+            rackNo0 = '2';
+            faultExistYn0 = 'Y';
             soc0 = '50.1';
             rackVolt0 = '23.1';
             rackCurrent0 = '11.1';
-
-            soc1 = '50.1';
-            rackVolt1 = '23.9';
-            rackCurrent1 = '11.9';
-
-            soc2 = '22.9';
-            rackVolt2 = '20.1';
-            rackCurrent2 = '13.8';
+            faultList0 = [{"errorCode":"batteryError", "errorName":"batteryRack1Error1212"},{"errorCode":"batteryError", "errorName":"batteryRack1Error01"}];
 
         } else if (index == 3) {
+            rackNo0 = '1';
+            faultExistYn0 = 'N';
             soc0 = '76.9';
             rackVolt0 = '23.1';
             rackCurrent0 = '11.1';
-
-            soc1 = '48.9';
-            rackVolt1 = '23.9';
-            rackCurrent1 = '11.9';
-
-            soc2 = '31.1';
-            rackVolt2 = '20.0';
-            rackCurrent2 = '11.8';
+            faultList0 = [];
 
         } else {
+            rackNo0 = '1';
+            faultExistYn0 = 'N';
             soc0 = '96.9';
             rackVolt0 = '22.3';
             rackCurrent0 = '11.3';
-
-            soc1 = '22.2';
-            rackVolt1 = '23.8';
-            rackCurrent1 = '11.8';
-
-            soc2 = '24.9';
-            rackVolt2 = '20.2';
-            rackCurrent2 = '12.1';
+            faultList0 = [];
         }
 
         let rackData = {
-            rackInfo: [{
-                rackNo: '1',
-                faultExistYn: 'N',
+                rackNo: rackNo0,
+                faultExistYn: faultExistYn0,
                 chargingStatus: controlType  == undefined ? 'charging' : controlType,
                 soc: soc0,
                 rackVolt: rackVolt0,
                 rackCurrent: rackCurrent0,
-                moduleInfo: [{
-                    moduleNo: '1',
-                    cellInfo: {
-                        cell1Volt: '1.0',
-                        cell2Volt: '2.0',
-                        cell3Volt: '3.0'
-                    },
-                    temperatureInfo: {
-                        temperature1: '20.1',
-                        temperature2: '20.2',
-                        temperature3: '20.3'
-                    }
-                },
-                    {
-                        moduleNo: '2',
-                        cellInfo: {
-                            cell1Volt: '1.0',
-                            cell2Volt: '2.0',
-                            cell3Volt: '3.0'
-                        },
-                        temperatureInfo: {
-                            temperature1: '20.1',
-                            temperature2: '20.2',
-                            temperature3: '20.3'
-                        }
-                    }
-                ]
-            },
-                {
-                    rackNo: '2',
-                    faultExistYn: 'N',
-                    chargingStatus: controlType  == undefined ? 'charging' : controlType,
-                    soc: soc1,
-                    rackVolt: rackVolt1,
-                    rackCurrent: rackCurrent1,
-                    moduleInfo: [{
-                        moduleNo: '1',
-                        cellInfo: {
-                            cell1Volt: '1.0',
-                            cell2Volt: '2.0',
-                            cell3Volt: '3.0'
-                        },
-                        temperatureInfo: {
-                            temperature1: '20.1',
-                            temperature2: '20.2',
-                            temperature3: '20.3'
-                        }
-                    },
-                        {
-                            moduleNo: '2',
-                            cellInfo: {
-                                cell1Volt: '1.0',
-                                cell2Volt: '2.0',
-                                cell3Volt: '3.0'
-                            },
-                            temperatureInfo: {
-                                temperature1: '20.1',
-                                temperature2: '20.2',
-                                temperature3: '20.3'
-                            }
-                        }
-                    ]
-                },
-                {
-                    rackNo: '3',
-                    faultExistYn: 'N',
-                    chargingStatus: controlType  == undefined ? 'charging' : controlType,
-                    soc: soc2,
-                    rackVolt: rackVolt2,
-                    rackCurrent: rackCurrent2,
-                    moduleInfo: [{
-                        moduleNo: '1',
-                        cellInfo: {
-                            cell1Volt: '1.0',
-                            cell2Volt: '2.0',
-                            cell3Volt: '3.0'
-                        },
-                        temperatureInfo: {
-                            temperature1: '20.1',
-                            temperature2: '20.2',
-                            temperature3: '20.3'
-                        }
-                    },
-                        {
-                            moduleNo: '2',
-                            cellInfo: {
-                                cell1Volt: '1.0',
-                                cell2Volt: '2.0',
-                                cell3Volt: '3.0'
-                            },
-                            temperatureInfo: {
-                                temperature1: '20.1',
-                                temperature2: '20.2',
-                                temperature3: '20.3'
-                            }
-                        }
-                    ]
-                }
-            ]
+                faultList: faultList0
         }
+
 
         let batteryData = {
             id: 'M/W001',
