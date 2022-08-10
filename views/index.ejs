@@ -10,17 +10,18 @@
 <input type="button" value="main data" onclick="sendStatusData()">
 <input type="button" value="pcsInnerSensor data" onclick="sendPcsInnerSensorData()">
 <input type="button" value="batteryInnerSensor data" onclick="sendBatteryInnerSensorData()">
+<input type="button" value="cpcm data" onclick="sendCpcmData()">
 </body>
 <script>
     var ws = new WebSocket('ws://localhost:3100');
     //var ws = new WebSocket('ws://101.101.216.193:3100');
     //var ws = new WebSocket('ws://14.39.99.148:7003'); // Server
-    //var ws = new WebSocket('ws://172.30.1.44:3100'); // Server
+    // var ws = new WebSocket('ws://172.30.1.44:3100'); // Server
 
 
     ws.onopen = (event) => {
         console.log("---------------------------------------------");
-        let sendData = {id: 'M/W001', eventType: 'req', deviceType: 'M/W', dataType: 'connect'};
+        let sendData = {id: 'M/W001', eventType: 'req', deviceType: 'middleware', dataType: 'connect'};
         ws.send(JSON.stringify(sendData));
         console.log("---------------------------------------------\n\n");
     }
@@ -247,6 +248,7 @@
 
     function sendPcsData(index, controlType, controlValue) {
 
+        var chargingStatus;
         var disChargePower;
         var rSVolt;
         var upRCurr;
@@ -262,6 +264,7 @@
         var faultList;
 
         if (index == 0) {
+            chargingStatus = 'charging';
             disChargePower = '101.5';
             rSVolt = '41.2';
             upRCurr = '11.2';
@@ -274,8 +277,9 @@
             upTCurr = '11.3';
             dcBatteryCurr = '11.5';
             faultExistYn = 'N';
-            faultList = [{"errorCode": "10", "errorName":"Power stack short circuit Trip"},{"errorCode": "20","errorName":"Controller A/D Converter Line Offset Trip (Current part)"},{"errorCode": "30","errorName":"Controller Fault"},{"errorCode": "20","errorName":"Controller Fault"},{"errorCode": "20","errorName":"Controller Fault"},{"errorCode": "20","errorName":"Controller Fault"},{"errorCode": "20","errorName":"Controller Fault"},{"errorCode": "20","errorName":"Controller Fault"},{"errorCode": "20","errorName":"Controller Fault11"},{"errorCode": "20","errorName":"Controller Fault121313"}];
+            faultList = [{"errorCode": "10", "errorCodeName":"Power stack short circuit Trip"},{"errorCode": "20","errorCodeName":"Controller A/D Converter Line Offset Trip (Current part)"},{"errorCode": "30","errorCodeName":"Controller Fault"},{"errorCode": "20","errorCodeName":"Controller Fault"},{"errorCode": "20","errorCodeName":"Controller Fault"},{"errorCode": "20","errorCodeName":"Controller Fault"},{"errorCode": "20","errorCodeName":"Controller Fault"},{"errorCode": "20","errorCodeName":"Controller Fault"},{"errorCode": "20","errorCodeName":"Controller Fault11"},{"errorCode": "20","errorCodeName":"Controller Fault121313"}];
         } else {
+            chargingStatus = 'discharging';
             disChargePower = '100.5';
             rSVolt = '40.2';
             upRCurr = '10.2';
@@ -288,7 +292,7 @@
             upTCurr = '10.3';
             dcBatteryCurr = '10.5';
             faultExistYn = 'N';
-            faultList = [{"errorCode": "20","errorName":"Power stack short circuit Trip"},{"errorCode": "20","errorName":"Controller A/D Converter Line Offset Trip (Current part)"},{"errorCode": "20","errorName":"Controller Fault"},{"errorCode": "20","errorName":"Controller Fault"},{"errorCode": "20","errorName":"Controller Fault"},{"errorCode": "20","errorName":"Controller Fault"},{"errorCode": "20","errorName":"Controller Fault"},{"errorCode": "20","errorName":"Controller Fault"},{"errorCode": "20","errorName":"Controller Fault11"},{"errorCode": "20","errorName":"Controller Fault121313"},{"errorCode": "20","errorName":"Controller Fault"}];
+            faultList = [{"errorCode": "20","errorCodeName":"Power stack short circuit Trip"},{"errorCode": "20","errorCodeName":"Controller A/D Converter Line Offset Trip (Current part)"},{"errorCode": "20","errorCodeName":"Controller Fault"},{"errorCode": "20","errorCodeName":"Controller Fault"},{"errorCode": "20","errorCodeName":"Controller Fault"},{"errorCode": "20","errorCodeName":"Controller Fault"},{"errorCode": "20","errorCodeName":"Controller Fault"},{"errorCode": "20","errorCodeName":"Controller Fault"},{"errorCode": "20","errorCodeName":"Controller Fault11"},{"errorCode": "20","errorCodeName":"Controller Fault121313"},{"errorCode": "20","errorCodeName":"Controller Fault"}];
         }
 
         let sendData = {
@@ -298,6 +302,7 @@
             dataType: 'status',
             data: {
                 operationStatus : controlType == undefined ? 'discharging' : controlType,
+                chargingStatus : chargingStatus,
                 faultExistYn : faultExistYn,
                 disChargePower : controlValue == undefined ? disChargePower : controlValue,
                 rSVolt : rSVolt,
@@ -329,52 +334,58 @@
         var faultList0;
         var faultExistYn0;
         var rackNo0;
+        var chargingStatus;
 
         if (index == 0) {
             rackNo0 = '1';
-            faultExistYn0 = 'Y';
+            chargingStatus = 'charging';
             soc0 = '22.2';
             rackVolt0 = '23.1';
             rackCurrent0 = '11.1';
-            faultList0 = [{"errorCode":"batteryError", "errorName":"batteryRack1Error"},{"errorCode":"batteryError", "errorName":"batteryRack1Error01"},{"errorCode":"batteryError", "errorName":"batteryRack1Error2222222"}];
+            faultExistYn0 = 'N';
+            faultList0 = [];
 
         } else if (index == 1) {
-            rackNo0 = '3';
+            rackNo0 = '2';
+            chargingStatus = 'error';
+            soc0 = '';
+            rackVolt0 = '';
+            rackCurrent0 = '';
             faultExistYn0 = 'Y';
-            soc0 = '48.9';
-            rackVolt0 = '23.1';
-            rackCurrent0 = '11.1';
-            faultList0 = [{"errorCode":"batteryError", "errorName":"batteryRack3"},{"errorCode":"batteryError", "errorName":"batteryRack3"}];
+            faultList0 = [{"errorCode":"batteryError", "errorCodeName":"batteryRack3"},{"errorCode":"batteryError", "errorCodeName":"batteryRack3"}];
 
         } else if (index == 2) {
             rackNo0 = '2';
-            faultExistYn0 = 'Y';
+            chargingStatus = 'charging';
             soc0 = '50.1';
             rackVolt0 = '23.1';
             rackCurrent0 = '11.1';
-            faultList0 = [{"errorCode":"batteryError", "errorName":"batteryRack1Error1212"},{"errorCode":"batteryError", "errorName":"batteryRack1Error01"}];
+            faultExistYn0 = 'N';
+            faultList0 = [];
 
         } else if (index == 3) {
             rackNo0 = '1';
+            chargingStatus = 'waiting';
+            soc0 = '';
+            rackVolt0 = '';
+            rackCurrent0 = '';
             faultExistYn0 = 'N';
-            soc0 = '76.9';
-            rackVolt0 = '23.1';
-            rackCurrent0 = '11.1';
             faultList0 = [];
 
         } else {
             rackNo0 = '1';
-            faultExistYn0 = 'N';
-            soc0 = '96.9';
-            rackVolt0 = '22.3';
-            rackCurrent0 = '11.3';
-            faultList0 = [];
+            chargingStatus = 'error';
+            soc0 = '';
+            rackVolt0 = '';
+            rackCurrent0 = '';
+            faultExistYn0 = 'Y';
+            faultList0 = [{"errorCode":"batteryError", "errorCodeName":"batteryRack3"},{"errorCode":"batteryError", "errorCodeName":"batteryRack3"}];
         }
 
         let rackData = {
                 rackNo: rackNo0,
                 faultExistYn: faultExistYn0,
-                chargingStatus: controlType  == undefined ? 'charging' : controlType,
+                chargingStatus: chargingStatus,
                 soc: soc0,
                 rackVolt: rackVolt0,
                 rackCurrent: rackCurrent0,
@@ -503,6 +514,61 @@
         setTimeout(function(){
 
             batteryInnerSensorData(10);
+        }, 11000);
+
+    }
+
+    function sendCpcmData() {
+        setTimeout(function(){
+
+            cpcmData(0);
+        }, 1000);
+
+        setTimeout(function(){
+
+            cpcmData(1);
+        }, 2000);
+
+        setTimeout(function(){
+
+            cpcmData(2);
+        }, 3000);
+
+        setTimeout(function(){
+
+            cpcmData(3);
+        }, 4000);
+
+        setTimeout(function(){
+
+            cpcmData(4);
+        }, 5000);
+
+        setTimeout(function(){
+
+            cpcmData(5);
+        }, 6000);
+
+        setTimeout(function(){
+
+            cpcmData(6);
+        }, 7000);
+        setTimeout(function(){
+
+            cpcmData(7);
+        }, 8000);
+
+        setTimeout(function(){
+
+            cpcmData(8);
+        }, 9000);
+        setTimeout(function(){
+
+            cpcmData(9);
+        }, 10000);
+        setTimeout(function(){
+
+            cpcmData(10);
         }, 11000);
 
     }
@@ -719,6 +785,546 @@
 
         console.log("---------------------------------------------");
         console.log("sendBatteryInnerSensorData : " + JSON.stringify(sendData));
+        console.log("---------------------------------------------\n\n");
+
+        ws.send(JSON.stringify(sendData));
+    }
+
+
+    function cpcmData(index) {
+        var batteryVolt;
+        var batteryCurr;
+        var batteryPower;
+        var batteryChargePowerPer;
+        var dcLinkPowerPer;
+        var dcAccPowerKwh;
+        var inverterOutPowerPer;
+        var inverterOutCurr;
+        var inverterOutVolt;
+        var inverterDcVolt;
+        var dcCurrSensorOffset;
+        var inverterOutAcAvailableCurrPer;
+        var inverterOutAcInvalidityCurr;
+        var inverterOutAcAvailableCurr;
+        var inverterOutHz;
+        var inverterOutPowerKw;
+        var inverterOutAccPowerKwh;
+        var inverterOutPowerFactor;
+        var rmsAcVolt;
+        var rmsAcPowerKw;
+        var inverterOutSync;
+        var hzValue;
+        var inverterOutUCurr;
+        var inverterOutVCurr;
+        var inverterOutWCurr;
+        var inverterStackTemp;
+        var filterITemp;
+        var filterCTemp;
+        var pcsInsideTemp;
+        var batteryTemp;
+        var transformersTemp;
+        var rSVolt;
+        var sTVolt;
+        var tRVolt;
+        var systemLinkStatus;
+        var systemLinkStatusName;
+        var faultExistYn;
+        var warningExistYn;
+        var errorList;
+
+        if (index == 0) {
+            batteryVolt = '1';
+            batteryCurr = '1';
+            batteryPower = '1';
+            batteryChargePowerPer = '1';
+            dcLinkPowerPer = '1';
+            dcAccPowerKwh = '1';
+            inverterOutPowerPer = '1';
+            inverterOutCurr = '1';
+            inverterOutVolt = '1';
+            inverterDcVolt = '1';
+            dcCurrSensorOffset = '1';
+            inverterOutAcAvailableCurrPer = '1';
+            inverterOutAcInvalidityCurr = '1';
+            inverterOutAcAvailableCurr = '1';
+            inverterOutHz = '1';
+            inverterOutPowerKw = '1';
+            inverterOutAccPowerKwh = '1';
+            inverterOutPowerFactor = '1';
+            rmsAcVolt = '1';
+            rmsAcPowerKw = '1';
+            inverterOutSync = '1';
+            hzValue = '1';
+            inverterOutUCurr = '1';
+            inverterOutVCurr = '1';
+            inverterOutWCurr = '1';
+            inverterStackTemp = '1';
+            filterITemp = '1';
+            filterCTemp = '1';
+            pcsInsideTemp = '1';
+            batteryTemp = '1';
+            transformersTemp = '1';
+            rSVolt = '1';
+            sTVolt = '1';
+            tRVolt = '1';
+            systemLinkStatus = '1';
+            systemLinkStatusName = '1';
+            faultExistYn = 'N';
+            warningExistYn = 'N';
+            errorList = [{"errorCode":"cpcmError", "errorCodeName":"cpcmRack1"},{"errorCode":"cpcmError", "errorCodeName":"cpcmRack1"}];
+        } else if (index == 1) {
+            batteryVolt = '2';
+            batteryCurr = '2';
+            batteryPower = '2';
+            batteryChargePowerPer = '2';
+            dcLinkPowerPer = '2';
+            dcAccPowerKwh = '2';
+            inverterOutPowerPer = '2';
+            inverterOutCurr = '2';
+            inverterOutVolt = '2';
+            inverterDcVolt = '2';
+            dcCurrSensorOffset = '2';
+            inverterOutAcAvailableCurrPer = '2';
+            inverterOutAcInvalidityCurr = '2';
+            inverterOutAcAvailableCurr = '2';
+            inverterOutHz = '2';
+            inverterOutPowerKw = '2';
+            inverterOutAccPowerKwh = '2';
+            inverterOutPowerFactor = '2';
+            rmsAcVolt = '2';
+            rmsAcPowerKw = '2';
+            inverterOutSync = '2';
+            hzValue = '2';
+            inverterOutUCurr = '2';
+            inverterOutVCurr = '2';
+            inverterOutWCurr = '2';
+            inverterStackTemp = '2';
+            filterITemp = '2';
+            filterCTemp = '2';
+            pcsInsideTemp = '2';
+            batteryTemp = '2';
+            transformersTemp = '2';
+            rSVolt = '2';
+            sTVolt = '2';
+            tRVolt = '2';
+            systemLinkStatus = '2';
+            systemLinkStatusName = '연계 상태';
+            faultExistYn = 'N';
+            warningExistYn = 'Y';
+            errorList = [{"errorCode":"cpcmError", "errorCodeName":"cpcmRack2"},{"errorCode":"cpcmError", "errorCodeName":"cpcmRack2"}];
+        }
+        else if (index == 2) {
+            batteryVolt = '3';
+            batteryCurr = '3';
+            batteryPower = '3';
+            batteryChargePowerPer = '3';
+            dcLinkPowerPer = '3';
+            dcAccPowerKwh = '3';
+            inverterOutPowerPer = '3';
+            inverterOutCurr = '3';
+            inverterOutVolt = '3';
+            inverterDcVolt = '3';
+            dcCurrSensorOffset = '3';
+            inverterOutAcAvailableCurrPer = '3';
+            inverterOutAcInvalidityCurr = '3';
+            inverterOutAcAvailableCurr = '3';
+            inverterOutHz = '3';
+            inverterOutPowerKw = '3';
+            inverterOutAccPowerKwh = '3';
+            inverterOutPowerFactor = '3';
+            rmsAcVolt = '3';
+            rmsAcPowerKw = '3';
+            inverterOutSync = '3';
+            hzValue = '3';
+            inverterOutUCurr = '3';
+            inverterOutVCurr = '3';
+            inverterOutWCurr = '3';
+            inverterStackTemp = '3';
+            filterITemp = '3';
+            filterCTemp = '3';
+            pcsInsideTemp = '3';
+            batteryTemp = '3';
+            transformersTemp = '3';
+            rSVolt = '3';
+            sTVolt = '3';
+            tRVolt = '3';
+            systemLinkStatus = '3';
+            systemLinkStatusName = '연계 상태';
+            faultExistYn = 'Y';
+            warningExistYn = 'N';
+            errorList = [{"errorCode":"cpcmError", "errorCodeName":"cpcmRack3"},{"errorCode":"cpcmError", "errorCodeName":"cpcmRack3"}];
+        } else if (index == 3) {
+            batteryVolt = '4';
+            batteryCurr = '4';
+            batteryPower = '4';
+            batteryChargePowerPer = '4';
+            dcLinkPowerPer = '4';
+            dcAccPowerKwh = '4';
+            inverterOutPowerPer = '4';
+            inverterOutCurr = '4';
+            inverterOutVolt = '4';
+            inverterDcVolt = '4';
+            dcCurrSensorOffset = '4';
+            inverterOutAcAvailableCurrPer = '4';
+            inverterOutAcInvalidityCurr = '4';
+            inverterOutAcAvailableCurr = '4';
+            inverterOutHz = '4';
+            inverterOutPowerKw = '4';
+            inverterOutAccPowerKwh = '4';
+            inverterOutPowerFactor = '4';
+            rmsAcVolt = '4';
+            rmsAcPowerKw = '4';
+            inverterOutSync = '4';
+            hzValue = '4';
+            inverterOutUCurr = '4';
+            inverterOutVCurr = '4';
+            inverterOutWCurr = '4';
+            inverterStackTemp = '4';
+            filterITemp = '4';
+            filterCTemp = '4';
+            pcsInsideTemp = '4';
+            batteryTemp = '4';
+            transformersTemp = '4';
+            rSVolt = '4';
+            sTVolt = '4';
+            tRVolt = '4';
+            systemLinkStatus = '4';
+            systemLinkStatusName = '연계 상태';
+            faultExistYn = 'Y';
+            warningExistYn = 'Y';
+            errorList = [{"errorCode":"cpcmError", "errorCodeName":"cpcmRack4"},{"errorCode":"cpcmError", "errorCodeName":"cpcmRack4"}];
+        } else if (index == 4) {
+            batteryVolt = '5';
+            batteryCurr = '5';
+            batteryPower = '5';
+            batteryChargePowerPer = '5';
+            dcLinkPowerPer = '5';
+            dcAccPowerKwh = '5';
+            inverterOutPowerPer = '5';
+            inverterOutCurr = '5';
+            inverterOutVolt = '5';
+            inverterDcVolt = '5';
+            dcCurrSensorOffset = '5';
+            inverterOutAcAvailableCurrPer = '5';
+            inverterOutAcInvalidityCurr = '5';
+            inverterOutAcAvailableCurr = '5';
+            inverterOutHz = '5';
+            inverterOutPowerKw = '5';
+            inverterOutAccPowerKwh = '5';
+            inverterOutPowerFactor = '5';
+            rmsAcVolt = '5';
+            rmsAcPowerKw = '5';
+            inverterOutSync = '5';
+            hzValue = '5';
+            inverterOutUCurr = '5';
+            inverterOutVCurr = '5';
+            inverterOutWCurr = '5';
+            inverterStackTemp = '5';
+            filterITemp = '5';
+            filterCTemp = '5';
+            pcsInsideTemp = '5';
+            batteryTemp = '5';
+            transformersTemp = '5';
+            rSVolt = '5';
+            sTVolt = '5';
+            tRVolt = '5';
+            systemLinkStatus = '5';
+            systemLinkStatusName = '연계 상태';
+            faultExistYn = 'N';
+            warningExistYn = 'N';
+            errorList = [{"errorCode":"cpcmError", "errorCodeName":"cpcmRack5"},{"errorCode":"cpcmError", "errorCodeName":"cpcmRack5"}];
+        } else if (index == 5) {
+            batteryVolt = '6';
+            batteryCurr = '6';
+            batteryPower = '6';
+            batteryChargePowerPer = '6';
+            dcLinkPowerPer = '6';
+            dcAccPowerKwh = '6';
+            inverterOutPowerPer = '6';
+            inverterOutCurr = '6';
+            inverterOutVolt = '6';
+            inverterDcVolt = '6';
+            dcCurrSensorOffset = '6';
+            inverterOutAcAvailableCurrPer = '6';
+            inverterOutAcInvalidityCurr = '6';
+            inverterOutAcAvailableCurr = '6';
+            inverterOutHz = '6';
+            inverterOutPowerKw = '6';
+            inverterOutAccPowerKwh = '6';
+            inverterOutPowerFactor = '6';
+            rmsAcVolt = '6';
+            rmsAcPowerKw = '6';
+            inverterOutSync = '6';
+            hzValue = '6';
+            inverterOutUCurr = '6';
+            inverterOutVCurr = '6';
+            inverterOutWCurr = '6';
+            inverterStackTemp = '6';
+            filterITemp = '6';
+            filterCTemp = '6';
+            pcsInsideTemp = '6';
+            batteryTemp = '6';
+            transformersTemp = '6';
+            rSVolt = '6';
+            sTVolt = '6';
+            tRVolt = '6';
+            systemLinkStatus = '6';
+            systemLinkStatusName = '연계 상태';
+            faultExistYn = 'N';
+            warningExistYn = 'Y';
+            errorList = [{"errorCode":"cpcmError", "errorCodeName":"cpcmRack6"},{"errorCode":"cpcmError", "errorCodeName":"cpcmRack6"}];
+        }
+        else if (index == 6) {
+            batteryVolt = '7';
+            batteryCurr = '7';
+            batteryPower = '7';
+            batteryChargePowerPer = '7';
+            dcLinkPowerPer = '7';
+            dcAccPowerKwh = '7';
+            inverterOutPowerPer = '7';
+            inverterOutCurr = '7';
+            inverterOutVolt = '7';
+            inverterDcVolt = '7';
+            dcCurrSensorOffset = '7';
+            inverterOutAcAvailableCurrPer = '7';
+            inverterOutAcInvalidityCurr = '7';
+            inverterOutAcAvailableCurr = '7';
+            inverterOutHz = '7';
+            inverterOutPowerKw = '7';
+            inverterOutAccPowerKwh = '7';
+            inverterOutPowerFactor = '7';
+            rmsAcVolt = '7';
+            rmsAcPowerKw = '7';
+            inverterOutSync = '7';
+            hzValue = '7';
+            inverterOutUCurr = '7';
+            inverterOutVCurr = '7';
+            inverterOutWCurr = '7';
+            inverterStackTemp = '7';
+            filterITemp = '7';
+            filterCTemp = '7';
+            pcsInsideTemp = '7';
+            batteryTemp = '7';
+            transformersTemp = '7';
+            rSVolt = '7';
+            sTVolt = '7';
+            tRVolt = '7';
+            systemLinkStatus = '7';
+            systemLinkStatusName = '연계 상태';
+            faultExistYn = 'N';
+            warningExistYn = 'Y';
+            errorList = [{"errorCode":"cpcmError", "errorCodeName":"cpcmRack7"},{"errorCode":"cpcmError", "errorCodeName":"cpcmRack7"}];
+        } else if (index == 7) {
+            batteryVolt = '8';
+            batteryCurr = '8';
+            batteryPower = '8';
+            batteryChargePowerPer = '8';
+            dcLinkPowerPer = '8';
+            dcAccPowerKwh = '8';
+            inverterOutPowerPer = '8';
+            inverterOutCurr = '8';
+            inverterOutVolt = '8';
+            inverterDcVolt = '8';
+            dcCurrSensorOffset = '8';
+            inverterOutAcAvailableCurrPer = '8';
+            inverterOutAcInvalidityCurr = '8';
+            inverterOutAcAvailableCurr = '8';
+            inverterOutHz = '8';
+            inverterOutPowerKw = '8';
+            inverterOutAccPowerKwh = '8';
+            inverterOutPowerFactor = '8';
+            rmsAcVolt = '8';
+            rmsAcPowerKw = '8';
+            inverterOutSync = '8';
+            hzValue = '8';
+            inverterOutUCurr = '8';
+            inverterOutVCurr = '8';
+            inverterOutWCurr = '8';
+            inverterStackTemp = '8';
+            filterITemp = '8';
+            filterCTemp = '8';
+            pcsInsideTemp = '8';
+            batteryTemp = '8';
+            transformersTemp = '8';
+            rSVolt = '8';
+            sTVolt = '8';
+            tRVolt = '8';
+            systemLinkStatus = '8';
+            systemLinkStatusName = '연계 상태';
+            faultExistYn = 'N';
+            warningExistYn = 'Y';
+            errorList = [{"errorCode":"cpcmError", "errorCodeName":"cpcmRack8"},{"errorCode":"cpcmError", "errorCodeName":"cpcmRack8"}];
+        } else if (index == 8) {
+            batteryVolt = '9';
+            batteryCurr = '9';
+            batteryPower = '9';
+            batteryChargePowerPer = '9';
+            dcLinkPowerPer = '9';
+            dcAccPowerKwh = '9';
+            inverterOutPowerPer = '9';
+            inverterOutCurr = '9';
+            inverterOutVolt = '9';
+            inverterDcVolt = '9';
+            dcCurrSensorOffset = '9';
+            inverterOutAcAvailableCurrPer = '9';
+            inverterOutAcInvalidityCurr = '9';
+            inverterOutAcAvailableCurr = '9';
+            inverterOutHz = '9';
+            inverterOutPowerKw = '9';
+            inverterOutAccPowerKwh = '9';
+            inverterOutPowerFactor = '9';
+            rmsAcVolt = '9';
+            rmsAcPowerKw = '9';
+            inverterOutSync = '9';
+            hzValue = '9';
+            inverterOutUCurr = '9';
+            inverterOutVCurr = '9';
+            inverterOutWCurr = '9';
+            inverterStackTemp = '9';
+            filterITemp = '9';
+            filterCTemp = '9';
+            pcsInsideTemp = '9';
+            batteryTemp = '9';
+            transformersTemp = '9';
+            rSVolt = '9';
+            sTVolt = '9';
+            tRVolt = '9';
+            systemLinkStatus = '9';
+            systemLinkStatusName = '연계 상태';
+            faultExistYn = 'N';
+            warningExistYn = 'Y';
+            errorList = [{"errorCode":"cpcmError", "errorCodeName":"cpcmRack9"},{"errorCode":"cpcmError", "errorCodeName":"cpcmRack9"}];
+        } else if (index == 9) {
+            batteryVolt = '10';
+            batteryCurr = '10';
+            batteryPower = '10';
+            batteryChargePowerPer = '10';
+            dcLinkPowerPer = '10';
+            dcAccPowerKwh = '10';
+            inverterOutPowerPer = '10';
+            inverterOutCurr = '10';
+            inverterOutVolt = '10';
+            inverterDcVolt = '10';
+            dcCurrSensorOffset = '10';
+            inverterOutAcAvailableCurrPer = '10';
+            inverterOutAcInvalidityCurr = '10';
+            inverterOutAcAvailableCurr = '10';
+            inverterOutHz = '10';
+            inverterOutPowerKw = '10';
+            inverterOutAccPowerKwh = '10';
+            inverterOutPowerFactor = '10';
+            rmsAcVolt = '10';
+            rmsAcPowerKw = '10';
+            inverterOutSync = '10';
+            hzValue = '10';
+            inverterOutUCurr = '10';
+            inverterOutVCurr = '10';
+            inverterOutWCurr = '10';
+            inverterStackTemp = '10';
+            filterITemp = '10';
+            filterCTemp = '10';
+            pcsInsideTemp = '10';
+            batteryTemp = '10';
+            transformersTemp = '10';
+            rSVolt = '10';
+            sTVolt = '10';
+            tRVolt = '10';
+            systemLinkStatus = '10';
+            systemLinkStatusName = '연계 상태';
+            faultExistYn = 'N';
+            warningExistYn = 'Y';
+            errorList = [{"errorCode":"cpcmError", "errorCodeName":"cpcmRack10"},{"errorCode":"cpcmError", "errorCodeName":"cpcmRack10"}];
+        } else if (index == 10) {
+            batteryVolt = '11';
+            batteryCurr = '11';
+            batteryPower = '11';
+            batteryChargePowerPer = '11';
+            dcLinkPowerPer = '11';
+            dcAccPowerKwh = '11';
+            inverterOutPowerPer = '11';
+            inverterOutCurr = '11';
+            inverterOutVolt = '11';
+            inverterDcVolt = '11';
+            dcCurrSensorOffset = '11';
+            inverterOutAcAvailableCurrPer = '11';
+            inverterOutAcInvalidityCurr = '11';
+            inverterOutAcAvailableCurr = '11';
+            inverterOutHz = '11';
+            inverterOutPowerKw = '11';
+            inverterOutAccPowerKwh = '11';
+            inverterOutPowerFactor = '11';
+            rmsAcVolt = '11';
+            rmsAcPowerKw = '11';
+            inverterOutSync = '11';
+            hzValue = '11';
+            inverterOutUCurr = '11';
+            inverterOutVCurr = '11';
+            inverterOutWCurr = '11';
+            inverterStackTemp = '11';
+            filterITemp = '11';
+            filterCTemp = '11';
+            pcsInsideTemp = '11';
+            batteryTemp = '11';
+            transformersTemp = '11';
+            rSVolt = '11';
+            sTVolt = '11';
+            tRVolt = '11';
+            systemLinkStatus = '11';
+            systemLinkStatusName = '연계 상태';
+            faultExistYn = 'N';
+            warningExistYn = 'Y';
+            errorList = [];
+        }
+        let sendData = {
+            id: 'M/W001',
+            eventType: 'req',
+            deviceType: 'cpcm',
+            dataType: 'status',
+            data: {
+                batteryVolt: batteryVolt,
+                batteryCurr: batteryCurr,
+                batteryPower: batteryPower,
+                batteryChargePowerPer: batteryChargePowerPer,
+                dcLinkPowerPer: dcLinkPowerPer,
+                dcAccPowerKwh: dcAccPowerKwh,
+                inverterOutPowerPer: inverterOutPowerPer,
+                inverterOutCurr: inverterOutCurr,
+                inverterOutVolt: inverterOutVolt,
+                inverterDcVolt: inverterDcVolt,
+                dcCurrSensorOffset: dcCurrSensorOffset,
+                inverterOutAcAvailableCurrPer: inverterOutAcAvailableCurrPer,
+                inverterOutAcInvalidityCurr: inverterOutAcInvalidityCurr,
+                inverterOutAcAvailableCurr: inverterOutAcAvailableCurr,
+                inverterOutHz: inverterOutHz,
+                inverterOutPowerKw: inverterOutPowerKw,
+                inverterOutAccPowerKwh: inverterOutAccPowerKwh,
+                inverterOutPowerFactor: inverterOutPowerFactor,
+                rmsAcVolt: rmsAcVolt,
+                rmsAcPowerKw: rmsAcPowerKw,
+                inverterOutSync: inverterOutSync,
+                hzValue: hzValue,
+                inverterOutUCurr: inverterOutUCurr,
+                inverterOutVCurr: inverterOutVCurr,
+                inverterOutWCurr: inverterOutWCurr,
+                inverterStackTemp: inverterStackTemp,
+                filterITemp: filterITemp,
+                filterCTemp: filterCTemp,
+                pcsInsideTemp: pcsInsideTemp,
+                batteryTemp: batteryTemp,
+                transformersTemp: transformersTemp,
+                rSVolt: rSVolt,
+                sTVolt: sTVolt,
+                tRVolt: tRVolt,
+                systemLinkStatus: systemLinkStatus,
+                systemLinkStatusName : systemLinkStatusName,
+                faultExistYn : faultExistYn,
+                warningExistYn : warningExistYn,
+                errorList : errorList
+            }
+        };
+
+        console.log("---------------------------------------------");
+        console.log("sendCpcmData : " + JSON.stringify(sendData));
         console.log("---------------------------------------------\n\n");
 
         ws.send(JSON.stringify(sendData));
